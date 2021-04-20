@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [![Made in Nigeria](https://img.shields.io/badge/made%20in-nigeria-008751.svg?style=flat-square)](https://github.com/acekyd/made-in-nigeria)
 ## eth-vue Truffle Box: With Ganache Blockchain Option, Ropsten Network Configuration, and Gravatar access
 <br><br>
@@ -145,3 +146,18 @@ The default port for `truffle develop` is 9545, so it doesn't conflict with any 
 <br><br>
 ## Licence
 This dApp is distributed under the [GNU GPL-3.0](https://github.com/DOkwufulueze/eth-vue/blob/master/LICENCE.md) licence.
+=======
+# Smart-Contract-Wallet
+smart contract wallet is baed on the Ethereum.
+
+# Features
+- [ ] feature 1
+- [ ] feature 2
+- [ ] feature 3
+
+
+# Screenshot
+
+
+
+>>>>>>> 443335f08df35405a4cec1294e2f118a7726a642
