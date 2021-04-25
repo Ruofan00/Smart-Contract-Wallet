@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import dai from '../dai.png'
+import eth from '../eth-logo.png'
 
 class Main extends Component {
 
@@ -34,7 +34,7 @@ class Main extends Component {
                 this.props.stakeTokens(amount)
               }}>
               <div>
-                <label className="float-left"><b>Stake Tokens</b></label>
+                <label className="float-left"><b>Deposit</b></label>
                 <span className="float-right text-muted">
                   Balance: {window.web3.utils.fromWei(this.props.daiTokenBalance, 'Ether')}
                 </span>
@@ -48,12 +48,12 @@ class Main extends Component {
                   required />
                 <div className="input-group-append">
                   <div className="input-group-text">
-                    <img src={dai} height='32' alt=""/>
-                    &nbsp;&nbsp;&nbsp; mDAI
+                    <img src={eth} height='32' alt=""/>
+                    &nbsp;&nbsp;&nbsp; ETH
                   </div>
                 </div>
               </div>
-              <button type="submit" className="btn btn-primary btn-block btn-lg">STAKE!</button>
+              <button style={{backgroundColor:"#DDA0DD", border:0}} type="submit" className="btn btn-primary btn-block btn-lg">DEPOSIT!</button>
             </form>
             <button
               type="submit"
@@ -62,7 +62,7 @@ class Main extends Component {
                 event.preventDefault()
                 this.props.unstakeTokens()
               }}>
-                UN-STAKE...
+                WITHDRAW...
               </button>
           </div>
         </div>
