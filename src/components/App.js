@@ -146,14 +146,31 @@ import React, { Component } from 'react';
 // import daiLogo from '../dai-logo.png';
 import './App.css';
 import Web3 from 'web3';
-import DaiTokenMock from '../abis/DaiTokenMock.json'
-
+// import DaiTokenMock from '../abis/DaiTokenMock.json'
+import User2Contract from '../abis/User2Contract.json'
+import RecoverTools from '../abis/RecoverTools.json'
+import Messenger from '../abis/Messenger.json'
 class App extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      account: '',
+      balance: 0,
+      myMessenger: null,
+      transactions: []
+    }
+
+    this.transfer = this.transfer.bind(this)
+    this.loadBlockchainData = this.loadBlockchainData.bind(this)
+    
+  }
   async componentWillMount() {
     await this.loadWeb3()
     await this.loadBlockchainData()
   }
 
+  //connect to blockchain
   async loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
@@ -171,31 +188,44 @@ class App extends Component {
     const web3 = window.web3
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
-    const daiTokenAddress = "0x7b729B07EcBDEd8879Acf997aAF6546926982830" // Replace DAI Address Here
-    const daiTokenMock = new web3.eth.Contract(DaiTokenMock.abi, daiTokenAddress)
-    this.setState({ daiTokenMock: daiTokenMock })
-    const balance = await daiTokenMock.methods.balanceOf(this.state.account).call()
-    this.setState({ balance: web3.utils.fromWei(balance.toString(), 'Ether') })
-    const transactions = await daiTokenMock.getPastEvents('Transfer', { fromBlock: 0, toBlock: 'latest', filter: { from: this.state.account } })
-    this.setState({ transactions: transactions })
-    console.log(transactions)
+    // const daiTokenAddress = "0x7b729B07EcBDEd8879Acf997aAF6546926982830" // Replace DAI Address Here  
+    
+    
+    // var MyContract = new web3.eth.Contract(User2Contract.abi,"0x3a57790D3D8e6b4D469744b22c9424f69c95159C");
+    // var MyMessenger = MyContract.methods.getMessenger(accounts[0]).call();
+    // console.log(MyMessenger);
+    // console.log(MyContract);
+    // console.log(this.state.account);
+    // var data = await MyContract.methods.getMessenger("0x5D414BD62a2086f5a63bb4B2a7E109CF4f3f1269").call();
+    // console.log(data);
+    var messenger = new web3.eth.Contract(Messenger.abi,"0x22DbE46DBb5dDEFc9E9ba7e0cAE564d110E0Ea41");
+    this.setState({myMessenger:messenger});
+    console.log(this.state.myMessenger);
+    const balance = await messenger.methods.getBalance().call();
+    console.log(balance);
+    this.setState({ balance: web3.utils.fromWei(balance.toString(), 'Ether') });
+    
+    const transactions = await messenger.getPastEvents('Transfer',{fromBlock:0,toBlock:'latest',filter:{from:this.state.account}});
+    this.setState({transactions:transactions});
+
+
+    
+    // MyContract.methods.getMessenger(this.state.account).call().then(function(data){
+
+    // })
+    // const daiTokenMock = new web3.eth.Contract(DaiTokenMock.abi, daiTokenAddress)
+    // this.setState({ daiTokenMock: daiTokenMock })
+    // const balance = await daiTokenMock.methods.balanceOf(this.state.account).call()
+    // this.setState({ balance: web3.utils.fromWei(balance.toString(), 'Ether') })
+    // const transactions = await daiTokenMock.getPastEvents('Transfer', { fromBlock: 0, toBlock: 'latest', filter: { from: this.state.account } })
+    // this.setState({ transactions: transactions })
+    // console.log(transactions)
   }
 
   transfer(recipient, amount) {
-    this.state.daiTokenMock.methods.transfer(recipient, amount).send({ from: this.state.account })
+    this.state.myMessenger.methods.transfer(recipient, amount).send({ from: this.state.account })
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      account: '',
-      daiTokenMock: null,
-      balance: 0,
-      transactions: []
-    }
-
-    this.transfer = this.transfer.bind(this)
-  }
 
   render() {
     return (
@@ -215,9 +245,11 @@ class App extends Component {
                 <h1>{this.state.balance} ETH</h1>
                 <form onSubmit={(event) => {
                   event.preventDefault()
+                  console.log(this.amount.value);
                   const recipient = this.recipient.value
+                  // const amount = window.web3.utils.fromWei(this.amount.value);
                   const amount = window.web3.utils.toWei(this.amount.value, 'Ether')
-                  this.transfer(recipient, amount)
+                  this.transfer(recipient,this.amount.value);
                 }}>
                   <div className="form-group mr-sm-2">
                     <input
