@@ -159,7 +159,8 @@ class App extends Component {
       balance: 0,
       myMessenger: null,
       transactions: [],
-      myContract: null
+      myContract: null,
+      address:null
     }
 
     this.transfer = this.transfer.bind(this)
@@ -195,16 +196,22 @@ class App extends Component {
     var MyContract = new web3.eth.Contract(User2Contract.abi,"0xE45889fe4e28cA1EfAAdbA778b216bf134c94158");
     this.setState({myContract:MyContract})
     var messenger = await MyContract.methods.getMessenger(accounts[0]).call();
-    this.setState({myMessenger:messenger});
+    this.setState({address:messenger});
     // console.log(MyMessenger);
     // console.log(MyContract);
     // console.log(this.state.account);
     // var data = await MyContract.methods.getMessenger("0x5D414BD62a2086f5a63bb4B2a7E109CF4f3f1269").call();
     // console.log(data);
     var messengerFunction = new web3.eth.Contract(Messenger.abi,messenger);
+    
     // this.setState({myMessenger:messenger});
+    this.setState({myMessenger:messengerFunction});
+    // this.state.myMessenger.methods.deposit().send({
+    //   from:this.state.account,
+    //   value:10000000000000000000
+    // })
     console.log(this.state.myMessenger);
-    const balance = await messengerFunction.methods.getBalance().call();
+    const balance = await this.state.myMessenger.methods.getBalance().call();
     console.log(balance);
     this.setState({ balance: web3.utils.fromWei(balance.toString(), 'Ether') });
     
@@ -226,10 +233,20 @@ class App extends Component {
   }
 
   async transfer(recipient, amount) {
+    console.log(this.state.myMessenger);
     var contractRecipient = await this.state.myContract.methods.getMessenger(recipient).call();
-    this.state.myMessenger.methods.transfer(contractRecipient, amount).send({ from: this.state.myMesssenger })
+    console.log(contractRecipient);
+    
+    var recipientMessenger = new window.web3.eth.Contract(Messenger.abi,contractRecipient); 
+    console.log(recipientMessenger);
+    console.log(this.state.address);
+    const transferResult = await this.state.myMessenger.methods.transfer("0xe7976F8ed6072BA00EEb547c27b70cCbA7f4ABAb", amount).send({from:"0xa3a1844a4Fa580c23acAB9bE11Be9f203f763133"});
+    // console.log(recipientMessenger.methods.getBalance().call());
+    console.log("success");
   }
-
+ async withdraw(){
+   this.state.myMessenger.methods.withdraw().call();
+ }
 
   render() {
     return (
@@ -253,7 +270,7 @@ class App extends Component {
                   const recipient = this.recipient.value
                   // const amount = window.web3.utils.fromWei(this.amount.value);
                   const amount = window.web3.utils.toWei(this.amount.value, 'Ether')
-                  this.transfer(recipient,this.amount.value);
+                  this.transfer(recipient,amount);
                 }}>
                   <div className="form-group mr-sm-2">
                     <input
@@ -279,7 +296,7 @@ class App extends Component {
               className="btn btn-link btn-block btn-sm"
               onClick={(event) => {
                 event.preventDefault()
-                this.props.unstakeTokens()
+                this.withdraw()
               }}>
                 WITHDRAW...
               </button>
