@@ -15,7 +15,11 @@ class Navbar extends Component {
           <img src={wallet} width="30" height="30" className="d-inline-block align-top" alt="" />
           &nbsp; Ethereum Wallet
         </a>
-
+        <ul className="navbar-nav px-3">
+        <a style={{color:"white"}} className="nav-item text-nowrap d-none d-sm-none d-sm-block">
+            Get Messages
+          </a>
+          </ul>
         <ul className="navbar-nav px-3">
           <li className="nav-item text-nowrap d-none d-sm-none d-sm-block">
             <small className="text-secondary">
