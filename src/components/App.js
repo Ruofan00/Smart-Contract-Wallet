@@ -238,6 +238,15 @@ class App extends Component {
                       required />
                   </div>
                   <button type="submit" style = {{border:"0",color:"white",backgroundColor:"rgb(221, 160, 221)"}} className="btn btn-block">Send</button>
+                  <button
+              type="submit"
+              className="btn btn-link btn-block btn-sm"
+              onClick={(event) => {
+                event.preventDefault()
+                this.props.unstakeTokens()
+              }}>
+                WITHDRAW...
+              </button>
                 </form>
                 <table className="table">
                   <thead>
@@ -252,6 +261,7 @@ class App extends Component {
                         <tr key={key} >
                           <td>{tx.returnValues.to}</td>
                           <td>{window.web3.utils.fromWei(tx.returnValues.value.toString(), 'Ether')}</td>
+                          <td>Recover</td>
                         </tr>
                       )
                     }) }
