@@ -111,7 +111,8 @@ contract Messenger {
     function getBalance() public view returns (uint) {
         return address(this).balance;
     }
-    
+    function balanceOf() public 
+
     function recover() public returns(address){
         readMessage();
         require(cur_approval==numOfApprov,'Need more approval');

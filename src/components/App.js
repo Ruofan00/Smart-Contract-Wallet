@@ -158,7 +158,8 @@ class App extends Component {
       account: '',
       balance: 0,
       myMessenger: null,
-      transactions: []
+      transactions: [],
+      myContract: null
     }
 
     this.transfer = this.transfer.bind(this)
@@ -191,21 +192,23 @@ class App extends Component {
     // const daiTokenAddress = "0x7b729B07EcBDEd8879Acf997aAF6546926982830" // Replace DAI Address Here  
     
     
-    // var MyContract = new web3.eth.Contract(User2Contract.abi,"0x3a57790D3D8e6b4D469744b22c9424f69c95159C");
-    // var MyMessenger = MyContract.methods.getMessenger(accounts[0]).call();
+    var MyContract = new web3.eth.Contract(User2Contract.abi,"0xE45889fe4e28cA1EfAAdbA778b216bf134c94158");
+    this.setState({myContract:MyContract})
+    var messenger = await MyContract.methods.getMessenger(accounts[0]).call();
+    this.setState({myMessenger:messenger});
     // console.log(MyMessenger);
     // console.log(MyContract);
     // console.log(this.state.account);
     // var data = await MyContract.methods.getMessenger("0x5D414BD62a2086f5a63bb4B2a7E109CF4f3f1269").call();
     // console.log(data);
-    var messenger = new web3.eth.Contract(Messenger.abi,"0x22DbE46DBb5dDEFc9E9ba7e0cAE564d110E0Ea41");
-    this.setState({myMessenger:messenger});
+    var messengerFunction = new web3.eth.Contract(Messenger.abi,messenger);
+    // this.setState({myMessenger:messenger});
     console.log(this.state.myMessenger);
-    const balance = await messenger.methods.getBalance().call();
+    const balance = await messengerFunction.methods.getBalance().call();
     console.log(balance);
     this.setState({ balance: web3.utils.fromWei(balance.toString(), 'Ether') });
     
-    const transactions = await messenger.getPastEvents('Transfer',{fromBlock:0,toBlock:'latest',filter:{from:this.state.account}});
+    const transactions = await messengerFunction.getPastEvents('Transfer',{fromBlock:0,toBlock:'latest',filter:{from:this.state.account}});
     this.setState({transactions:transactions});
 
 
@@ -222,8 +225,9 @@ class App extends Component {
     // console.log(transactions)
   }
 
-  transfer(recipient, amount) {
-    this.state.myMessenger.methods.transfer(recipient, amount).send({ from: this.state.account })
+  async transfer(recipient, amount) {
+    var contractRecipient = await this.state.myContract.methods.getMessenger(recipient).call();
+    this.state.myMessenger.methods.transfer(contractRecipient, amount).send({ from: this.state.myMesssenger })
   }
 
 

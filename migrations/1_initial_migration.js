@@ -10,7 +10,11 @@ module.exports = async function(deployer) {
   // await deployer.deploy(RecoverTools);
   await deployer.deploy(User2Contract);
   await deployer.deploy(RecoverTools);
-
+  // const tokenMock = await Messenger.deployed();
+  // await tokenMock.mint(
+  //   '0x5D414BD62a2086f5a63bb4B2a7E109CF4f3f1269',
+  //   '1000000000000000000000'
+  // )
   // const M = await Messenger.deployed();
   // const R = await RecoverTools.deployed();
   // const U = await User2Contract.deployed();
