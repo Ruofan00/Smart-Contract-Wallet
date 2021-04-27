@@ -4,10 +4,10 @@ import "./Messenger.sol";
 
 contract User2Contract {
 
-	struct User{
-		string name;
-		Messenger account;
-	}
+	// struct User{
+	// 	string name;
+	// 	Messenger account;
+	// }
 	
 	// mapping(address=>Messenger) contracts;
 	// address[] public users = [0xBA7552924a31a9614c2d0615B62409a6501d6D17,
@@ -21,10 +21,10 @@ contract User2Contract {
 	// "0x3F6fbcDA0e19064f33757bcF4bbB43BB87d00C91",
 	// "0xdc333Dd5935AED4a95D305B8b38bac587cB72f66"];
 
-	mapping(address=>Messenger) contracts;
-	address[] public users = [0x5ac5EBEAbB1aC3003e81F0F8C0c0f9F0cCbc4788,
-	0x26eAD430951a44013b8c24546018a8b8aC915A55,
-	0x44f9D50604DD3bd6490010D648A9d8c4dF734D62];
+	// mapping(address=>Messenger) contracts;
+	// address[] public users = [0x5ac5EBEAbB1aC3003e81F0F8C0c0f9F0cCbc4788,
+	// 0x26eAD430951a44013b8c24546018a8b8aC915A55,
+	// 0x44f9D50604DD3bd6490010D648A9d8c4dF734D62];
 
 
 // =======
@@ -47,20 +47,20 @@ contract User2Contract {
 // >>>>>>> a959e3bfcde1610659d7d673fd5c19e5b79dcaf2
 
 
-	function init() public returns(bool){
-		for(uint i=0;i<users.length;i++) {
-			Messenger temp_mess = new Messenger(users,users.length-1);
-			//User newUser = User()
-			contracts[users[i]] = temp_mess;
-		}
-		//require(contracts.length==users.length,false);
-		return true;
-		// Messenger messenger = new Messenger(users,users.length-1);
-		// return messenger;
-	}
+	// function init() public returns(bool){
+	// 	for(uint i=0;i<users.length;i++) {
+	// 		Messenger temp_mess = new Messenger(users,users.length-1);
+	// 		//User newUser = User()
+	// 		contracts[users[i]] = temp_mess;
+	// 	}
+	// 	//require(contracts.length==users.length,false);
+	// 	return true;
+	// 	// Messenger messenger = new Messenger(users,users.length-1);
+	// 	// return messenger;
+	// }
 
-	function getMessenger(address addr) public view returns(Messenger) {
-		return contracts[addr];
-	}
+	// function getMessenger(address addr) public view returns(Messenger) {
+	// 	return contracts[addr];
+	// }
 
 }

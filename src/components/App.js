@@ -151,16 +151,20 @@ import Web3 from 'web3';
 import User2Contract from '../abis/User2Contract.json'
 import RecoverTools from '../abis/RecoverTools.json'
 import Messenger from '../abis/Messenger.json'
+import User from '../abis/User.json'
 
 class App extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      // wallet account
       account: '',
       balance: 0,
       myMessenger: null,
-      transactions: []
+      transactions: [],
+      myContract: null,
+      address:null
     }
 
     this.transfer = this.transfer.bind(this)
@@ -195,50 +199,120 @@ class App extends Component {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
     // const daiTokenAddress = "0x7b729B07EcBDEd8879Acf997aAF6546926982830" // Replace DAI Address Here  
+    //
     
+  //  var MyContract = new web3.eth.Contract(User2Contract.abi,"0x47e44d42CefCBb1B6188324F7586C19119b65225");
+  //  MyContract.methods.getMessenger(accounts[0]).call().then((myMessenger) => this.setState({address: myMessenger}));
+    // {
+    //   console.log("contract address",myMessenger);
+    //   this.setState({address:myMessenger});
+    //   var messenger = new web3.eth.Contract(Messenger.abi,myMessenger);
+    //   console.log('messenger',messenger);
+      
+    //   console.log(this.state.myMessenger);
+    //   const balance = this.state.myMessenger.methods.getBalance().call();
+    //   console.log(balance);
+    //   this.setState({ balance: web3.utils.fromWei(balance.toString(), 'Ether') });
+    // });
     
-    var MyContract = new web3.eth.Contract(User2Contract.abi,"0x48d65C30f7e13420410a4a22785Ad8467e7D4494");
-    MyContract.methods.getMessenger(accounts[0]).call().then(function(MyMessenger){
-      console.log("contract address",MyMessenger);
-    });
-    
-    console.log("User2Contract address",MyContract);
+  //  console.log("User2Contract address",MyContract);
+  //  console.log("Contract address",this.state.address);
     // console.log(this.state.account);
     // var data = await MyContract.methods.getMessenger("0x5D414BD62a2086f5a63bb4B2a7E109CF4f3f1269").call();
     // console.log(data);
-    var messenger = new web3.eth.Contract(Messenger.abi,myMessenger);
-    this.setState({myMessenger:messenger});
-    console.log(this.state.myMessenger);
-    const balance = await messenger.methods.getBalance().call();
+    
+// =======
+
+    var MyContract = new web3.eth.Contract(User2Contract.abi,"0x47e44d42CefCBb1B6188324F7586C19119b65225");
+    // user2contract address
+    this.setState({myContract:MyContract})
+    //var messenger = await MyContract.methods.getMessenger(accounts[0]).call();
+    var messenger = "0x95F8dD0bA68cEa767c37E7C6084F0e03848Cf5d8";
+    // current contract account
+    this.setState({address:messenger});
+   //web3.eth.defaultAccount = this.setState.address;
+    // console.log(MyMessenger);
+    // console.log(MyContract);
+    // console.log(this.state.account);
+    // var data = await MyContract.methods.getMessenger("0x5D414BD62a2086f5a63bb4B2a7E109CF4f3f1269").call();
+    // console.log(data);
+    //var messengerFunction = new web3.eth.Contract(Messenger.abi,messenger);
+    
+    var userFunction = new web3.eth.Contract(User.abi,messenger);
+
+    // this.setState({myMessenger:messenger});
+
+    // current messenger
+    this.setState({myMessenger:userFunction});
+    // this.state.myMessenger.methods.deposit().send({
+    //   from:this.state.account,
+    //   value:10000000000000000000
+    // })
+// >>>>>>> ed5ea85e7cbd8cdb61f0e4deb851efca893de983
+    
+    // var deposit = await userFunction.methods.deposit().send({
+    //   // from: this.state.account,
+    //   from: this.state.account,
+    //   value:100,
+    // });
+    
+    // console.log(this.state.myMessenger);
+
+    const balance = await this.state.myMessenger.methods.getBalance().call();
     console.log(balance);
+
     this.setState({ balance: web3.utils.fromWei(balance.toString(), 'Ether') });
     
-    const transactions = await messenger.getPastEvents('Transfer',{fromBlock:0,toBlock:'latest',filter:{from:this.state.account}});
-    this.setState({transactions:transactions});
+
+    // const transactions = await messengerFunction.getPastEvents('Transfer',{fromBlock:0,toBlock:'latest',filter:{from:this.state.account}});
+    // this.setState({transactions:transactions});
+
+    
+   // const transactions = await messengerFunction.getPastEvents('Transfer',{fromBlock:0,toBlock:'latest',filter:{from:this.state.account}});
+   // this.setState({transactions:transactions});
 
 
     
     // MyContract.methods.getMessenger(this.state.account).call().then(function(data){
 
     // })
-    // const daiTokenMock = new web3.eth.Contract(DaiTokenMock.abi, daiTokenAddress)
-    // this.setState({ daiTokenMock: daiTokenMock })
-    // const balance = await daiTokenMock.methods.balanceOf(this.state.account).call()
-    // this.setState({ balance: web3.utils.fromWei(balance.toString(), 'Ether') })
-    // const transactions = await daiTokenMock.getPastEvents('Transfer', { fromBlock: 0, toBlock: 'latest', filter: { from: this.state.account } })
-    // this.setState({ transactions: transactions })
-    // console.log(transactions)
   }
 
-  transfer(recipient, amount) {
-    this.state.myMessenger.methods.transfer(recipient, amount).send({ from: this.state.account })
-  }
+  //recipient address => wallet account
 
+  async transfer(recipient, _amount) {
+    console.log(this.state.myMessenger);
+    // var contractRecipient = await this.state.myContract.methods.getMessenger(recipient).call();
+    // console.log(contractRecipient);
+    
+    // var recipientMessenger = new window.web3.eth.Contract(Messenger.abi,contractRecipient); 
+    // console.log(recipientMessenger);
+    // console.log(this.state.address);
+    //0x902fd7E8A8bD54bE466407065E9bA2F973664381
+    console.log("transfer",_amount);
+    const amount = window.web3.utils.toWei(this.amount.value,'Ether');
+    const transferResult = await this.state.myMessenger.methods.transfer(this.state.address, 10)
+    .send({
+      from: this.state.account,
+      gas:0
+    });
+    // console.log(recipientMessenger.methods.getBalance().call());
+    // var send = new window.web3.eth.sendTransaction({ from:this.state.address,
+    //   to:"0x50A4826Cc49c89c70d4E6cA09fD5e3a4f7e05751", 
+    //   value:10 });
+    console.log("success");
+  }
+ async withdraw(){
+   this.state.myMessenger.methods.sendViaTransfer(this.state.account).send(
+      {from:this.state.account}
+    );
+   //.then(console.log("withdraw success"));
+ }
 
   render() {
     return (
       <div>
-        <Navbar account={this.state.account} />
+        <Navbar account={this.state.address} />
         <div className="container-fluid mt-5">
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
@@ -258,7 +332,7 @@ class App extends Component {
                   const recipient = this.recipient.value
                   // const amount = window.web3.utils.fromWei(this.amount.value);
                   const amount = window.web3.utils.toWei(this.amount.value, 'Ether')
-                  this.transfer(recipient,this.amount.value);
+                  this.transfer(recipient,amount);
                 }}>
                   <div className="form-group mr-sm-2">
                     <input
@@ -284,7 +358,7 @@ class App extends Component {
               className="btn btn-link btn-block btn-sm"
               onClick={(event) => {
                 event.preventDefault()
-                this.props.unstakeTokens()
+                this.withdraw()
               }}>
                 WITHDRAW...
               </button>
