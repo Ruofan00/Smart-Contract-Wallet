@@ -22,7 +22,6 @@ module.exports = {
       host: "127.0.0.1",
       port: 7545,
       network_id: "5777", // Match any network id
-      from: "0x902fd7E8A8bD54bE466407065E9bA2F973664381"
     },
   },
   contracts_directory: './src/contracts/',
